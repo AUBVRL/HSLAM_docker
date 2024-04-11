@@ -1,6 +1,4 @@
-# Project Title
-
-HSLAM (Hybrid Simultaneous Localization and Mapping) Project.
+# H-SLAM (Hybrid Simultaneous Localization and Mapping).
 
 A containerized "ready-to-use" SLAM application that leverages both direct and indirect methods.
 
@@ -21,14 +19,14 @@ Please cite the paper if used in an academic context.
 
 ## Project Description
 
-The FSLAM project is an implementation of a visual simultaneous localization and mapping algorithm. 
+The H-SLAM project is an implementation of a visual simultaneous localization and mapping algorithm. 
 It utilizes the ROS (Robot Operating System) Noetic and is designed for Ubuntu 20.04.
 
 
 
 ## Installation
 
-To use this Dockerfile and build the FSLAM project, follow these steps:
+To use this Dockerfile and build the H-SLAM project, follow these steps:
 
 1. Install Docker on your machine.
 2. Create a new directory and navigate to it in the terminal.
@@ -45,13 +43,13 @@ To use this Dockerfile and build the FSLAM project, follow these steps:
 The build will start using the Dockerfile structure, which is divided into multiple stages. 
 In the first stage, it sets up the base image with Ubuntu 20.04 and ROS Noetic using OSRF official noetic image. It also installs the necessary dependencies for catkin tools.
 In the second stage, it installs additional dependencies and the Realsense SDK. These dependencies include various libraries and tools required for camera support, graphics, system functionality, and GUI elements. Additionally, it downloads and extracts third-party libraries, including Ceres Solver and OpenCV with OpenCV Contrib.
-The project files are then copied into the container, and the Thirdparty libraries are built using the provided `build.sh` script. After that, the FSLAM project is built using CMake, and the `fslam_ros` wrapper is copied and built using catkin.
+The project files are then copied into the container, and the Thirdparty libraries are built using the provided `build.sh` script. After that, the H-SLAM project is built using CMake, and the `fslam_ros` wrapper is copied and built using catkin.
 Finally, the container's entry point is specified, and calibration files are copied into the project directory.
 
 ## Usage
 
-To run the FSLAM project you will need to run two containers of the same image.
-One to to publish images from the camera and the other to run the FSLAM main application.
+To run the H-SLAM project you will need to run two containers of the same image.
+One to to publish images from the camera and the other to run the H-SLAM main application.
 
 0. Allow access to containers:
 ``` bash
@@ -70,7 +68,7 @@ This command starts the container and provides an interactive terminal within it
 ```
 A display window will pop with the camera's stream.
 
-3. In the second terminal, execute this command to run the FSLAM algorithm on the image stream.
+3. In the second terminal, execute this command to run the H-SLAM algorithm on the image stream.
 ``` bash
     rosrun fslam_ros fslam_live image:=/usb_cam/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png
 ```
@@ -78,14 +76,14 @@ Start moving the camera/computer around and perform SLAM.
 
 ## Features
 
-- Utilizes the FSLAM algorithm for simultaneous localization and mapping.
+- Utilizes the H-SLAM algorithm for simultaneous localization and mapping.
 - Integrates with ROS Noetic and utilizes various ROS functionalities.
 - Supports camera integration, including Realsense cameras.
 - Provides a wrapper for ROS integration and additional functionality.
 
 ## Contributing
 
-Contributions to the FSLAM project are welcome. If you would like to contribute, please follow these steps:
+Contributions to the H-SLAM project are welcome. If you would like to contribute, please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch for your feature or bug fix.
