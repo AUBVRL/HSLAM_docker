@@ -1,12 +1,10 @@
-# Project Title
-
-HSLAM (Hybrid Simultaneous Localization and Mapping) Project.
+# HSLAM (Hybrid Simultaneous Localization and Mapping) Project.
 
 A containerized "ready-to-use" SLAM application that leverages both direct and indirect methods.
 
 ### Related Publications:
-[HSLAM]Younes, G. (2021). A Unified Hybrid Formulation for Visual SLAM (Doctoral dissertation).
-**[PDF] (https://scholarworks.aub.edu.lb/bitstream/handle/10938/22253/YounesGeorges_2021.pdf?sequence=5)**
+[A Unified Hybrid Formulation for Visual SLAM](https://scholarworks.aub.edu.lb/bitstream/handle/10938/22253/YounesGeorges_2021.pdf?sequence=5) (Doctoral dissertation), Younes, G. (2021).
+
 
 Please cite the paper if used in an academic context.
 
