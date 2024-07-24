@@ -7,19 +7,19 @@ roslaunch usb_cam usb_cam-test.launch
 #ROS RUN D435 CAM
 roslaunch realsense2_camera rs_camera.launch
 
-#ROS RUN FSLAM USB CAM
-rosrun fslam_ros fslam_live image:=/usb_cam/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png 
+#ROS RUN HSLAM USB CAM
+rosrun hslam_ros hslam_live image:=/usb_cam/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png 
 #WITH LOOP CLOSURE
-rosrun fslam_ros fslam_live image:=/usb_cam/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png LoopClosure=1 vocabPath=/catkin_ws/src/res/orbvoc.dbow3 quiet=1 mode=1 preset=1
+rosrun hslam_ros hslam_live image:=/usb_cam/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png LoopClosure=1 vocabPath=/catkin_ws/src/res/orbvoc.dbow3 quiet=1 mode=1 preset=1
 
 #ROS RUN HSLAM with D435 CAM
-rosrun fslam_ros fslam_live image:=/camera/color/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png
+rosrun hslam_ros hslam_live image:=/camera/color/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png
 
 #DOCKER BUILD COMMAND:
-docker build -f Dockerfile -t docker_fslam:<tag_name> .
+docker build -f Dockerfile -t docker_hslam:<tag_name> .
 #Allow acces for containers
 xhost +
 # docker run container for USB camera image
-docker run -it --net=host --privileged -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw --device /dev/video0:/dev/video0  docker_fslam:<tag_name> /bin/bash
+docker run -it --net=host --privileged -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw --device /dev/video0:/dev/video0  docker_hslam:<tag_name> /bin/bash
 # docker run container for D435 image
-docker run -it --net=host --privileged -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev:/dev  docker_fslam:d435 /bin/bash
+docker run -it --net=host --privileged -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev:/dev  docker_hslam:d435 /bin/bash

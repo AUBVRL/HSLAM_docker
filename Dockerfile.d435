@@ -66,39 +66,39 @@ RUN apt-get update\
         ros-$ROS_DISTRO-realsense2-camera
 
 # Set the working directory
-WORKDIR /catkin_ws/src/FSLAM/Thirdparty
+WORKDIR /catkin_ws/src/HSLAM/Thirdparty
 # Copy Thirdparty folder to the container
-COPY Thirdparty /catkin_ws/src/FSLAM/Thirdparty
+COPY Thirdparty /catkin_ws/src/HSLAM/Thirdparty
 #Download additional thirdparty libraries
-ARG cvVersion=3.4.6
-ARG DL_opencv="https://github.com/opencv/opencv/archive/${cvVersion}.zip"
-ARG DL_contrib="https://github.com/opencv/opencv_contrib/archive/${cvVersion}.zip"
-RUN wget ceres-solver.org/ceres-solver-1.14.0.tar.gz \
-    && tar -zxf ceres-solver-1.14.0.tar.gz \
-    && wget -O opencv.zip -nc "${DL_opencv}" \
-    && unzip opencv.zip \
-    && rm opencv.zip \
-    && cd opencv-3.4.6 \
-    && wget -O opencv_contrib.zip -nc "${DL_contrib}" \
-    && unzip opencv_contrib.zip \
-    && rm opencv_contrib.zip
+# ARG cvVersion=3.4.6
+# ARG DL_opencv="https://github.com/opencv/opencv/archive/${cvVersion}.zip"
+# ARG DL_contrib="https://github.com/opencv/opencv_contrib/archive/${cvVersion}.zip"
+# RUN wget ceres-solver.org/ceres-solver-1.14.0.tar.gz \
+#     && tar -zxf ceres-solver-1.14.0.tar.gz \
+#     && wget -O opencv.zip -nc "${DL_opencv}" \
+#     && unzip opencv.zip \
+#     && rm opencv.zip \
+#     && cd opencv-3.4.6 \
+#     && wget -O opencv_contrib.zip -nc "${DL_contrib}" \
+#     && unzip opencv_contrib.zip \
+#     && rm opencv_contrib.zip
 #build Thirparty libraries using script(cmake)
 RUN chmod +x build.sh && ./build.sh
 #Copy project files
-WORKDIR /catkin_ws/src/FSLAM
-COPY FSLAM /catkin_ws/src/FSLAM
-#build FSLAM project using cmake
+WORKDIR /catkin_ws/src/HSLAM
+COPY HSLAM /catkin_ws/src/HSLAM
+#build HSLAM project using cmake
 RUN mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelwithDebInfo && make -j 10
-#copy fslam_ros wrapper and resource files to run fslam_ros
+#copy hslam_ros wrapper and resource files to run hslam_ros
 COPY res /catkin_ws/src/res
-COPY fslam_ros /catkin_ws/src/fslam_ros
+COPY hslam_ros /catkin_ws/src/hslam_ros
 
 WORKDIR /catkin_ws/
 RUN catkin init \
     && catkin config \
     -DCMAKE_BUILD_TYPE=Release \
     --extend /opt/ros/$ROS_DISTRO \
-    && catkin build fslam_ros
+    && catkin build hslam_ros
 RUN sed --in-place --expression \
       '$isource "/catkin_ws/devel/setup.bash"' \
       /ros_entrypoint.sh

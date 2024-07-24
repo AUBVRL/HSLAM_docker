@@ -42,17 +42,17 @@ To use this Dockerfile and build the H-SLAM project, follow these steps:
 3. Clone this repository into the previously created directory.
 4. Open a terminal and navigate to the directory containing the Dockerfile and project files.
 ```bash
-    cd ~/<YOUR_PATH>/fslam_ros_docker
+    cd ~/<YOUR_PATH>/hslam_ros_docker
 ```
 6. Run the following command to build the Docker image:
 
 ```bash
-    docker build -t fslam .
+    docker build -t hslam .
 ```
 The build will start using the Dockerfile structure, which is divided into multiple stages. 
 In the first stage, it sets up the base image with Ubuntu 20.04 and ROS Noetic using OSRF official noetic image. It also installs the necessary dependencies for catkin tools.
 In the second stage, it installs additional dependencies and the Realsense SDK. These dependencies include various libraries and tools required for camera support, graphics, system functionality, and GUI elements. Additionally, it downloads and extracts third-party libraries, including Ceres Solver and OpenCV with OpenCV Contrib.
-The project files are then copied into the container, and the Thirdparty libraries are built using the provided `build.sh` script. After that, the H-SLAM project is built using CMake, and the `fslam_ros` wrapper is copied and built using catkin.
+The project files are then copied into the container, and the Thirdparty libraries are built using the provided `build.sh` script. After that, the H-SLAM project is built using CMake, and the `hslam_ros` wrapper is copied and built using catkin.
 Finally, the container's entry point is specified, and calibration files are copied into the project directory.
 
 ## Usage
@@ -67,7 +67,7 @@ One to to publish images from the camera and the other to run the H-SLAM main ap
 
 1. Open two terminals and execute the following command in each:
 ``` bash
-    docker run -it --net=host --privileged -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw --device /dev/video0:/dev/video0  fslam /bin/bash
+    docker run -it --net=host --privileged -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix:rw --device /dev/video0:/dev/video0  hslam /bin/bash
 ```
 This command starts the container and provides an interactive terminal within it.
 
@@ -79,7 +79,7 @@ A display window will pop with the camera's stream.
 
 3. In the second terminal, execute this command to run the H-SLAM algorithm on the image stream.
 ``` bash
-    rosrun fslam_ros fslam_live image:=/usb_cam/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png
+    rosrun hslam_ros hslam_live image:=/usb_cam/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png
 ```
 Start moving the camera/computer around and perform SLAM.
 

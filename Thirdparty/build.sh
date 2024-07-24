@@ -22,15 +22,25 @@ export DEBIAN_FRONTEND=noninteractive
 #cd $SCRIPTPATH/Thirdparty/
 #wget ceres-solver.org/ceres-solver-1.14.0.tar.gz
 #tar -zxf ceres-solver-1.14.0.tar.gz && 
+echo -e "Compiling Ceres\n"
 cd ceres-solver-1.14.0 && mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=$InstallDir -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DCXX11=ON && make -j $(nproc) && make install && cd .. && rm -r build && cd .. && rm ceres-solver-1.14.0.tar.gz && rm -r ceres-solver-1.14.0
+cmake .. -DCMAKE_INSTALL_PREFIX=$InstallDir -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DCXX11=ON 
+make -j $(nproc) && make install
+cd .. && rm -r build
+cd .. && rm ceres-solver-1.14.0.tar.gz && rm -r ceres-solver-1.14.0
+echo -e "Ceres Installed\n"
 
 #optional libs to record pangolin gui
 #sudo apt -y install ffmpeg libavcodec-dev libavutil-dev libavformat-dev libswscale-dev libavdevice-dev
 
 #if you have OpenCV3.4 comment out the following and specify the directory later
 #sudo apt -y install libjpeg8-dev libpng-dev libtiff5-dev libtiff-dev libavcodec-dev libavformat-dev libv4l-dev libgtk2.0-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools v4l-utils
+# OpenCV installation
+echo -e "Compiling OpenCV3.4.6\n"
 cvVersion=3.4.6
+# Define directories
+OPENCV_DIR=$SCRIPTPATH/opencv-${cvVersion}
+OPENCV_CONTRIB_DIR=$OPENCV_DIR/opencv_contrib-${cvVersion}
 #if [ ! -d "$SCRIPTPATH/Thirdparty/opencv-${cvVersion}" ]; then
 #  DL_opencv="https://github.com/opencv/opencv/archive/${cvVersion}.zip"
 #  DL_contrib="https://github.com/opencv/opencv_contrib/archive/${cvVersion}.zip"
@@ -38,10 +48,17 @@ cvVersion=3.4.6
 #  wget -O opencv.zip -nc "${DL_opencv}" && unzip opencv.zip && rm opencv.zip && cd opencv-${cvVersion}
 #  wget -O opencv_contrib.zip -nc "${DL_contrib}" && unzip opencv_contrib.zip && rm opencv_contrib.zip
 #fi
+cd $OPENCV_DIR && mkdir -p build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_INSTALL_PREFIX=$InstallDir -DWITH_V4L=ON -DWITH_CUDA=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DWITH_QT=ON -DCMAKE_CXX_FLAGS=-std=c++11 -DWITH_OPENGL=ON -DOPENCV_EXTRA_MODULES_PATH=$OPENCV_CONTRIB_DIR/modules -DOPENCV_ENABLE_NONFREE=ON -DCeres_DIR=$InstallDir/lib/cmake/Ceres
 
-cd $SCRIPTPATH/opencv-${cvVersion} && mkdir -p build && cd build &&cmake .. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_INSTALL_PREFIX=$InstallDir -DWITH_V4L=ON -DWITH_CUDA=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DWITH_QT=ON -DCMAKE_CXX_FLAGS=-std=c++11 -DWITH_OPENGL=ON -DOPENCV_EXTRA_MODULES_PATH=$SCRIPTPATH/opencv-${cvVersion}/opencv_contrib-${cvVersion}/modules -DOPENCV_ENABLE_NONFREE=ON -DCeres_DIR=$InstallDir/lib/cmake/Ceres && make -j $(nproc) && make install && cd .. && rm -r build
+make -j $(nproc) && make install
+cd .. && rm -rf build
+#cd $SCRIPTPATH/opencv-${cvVersion} && mkdir -p build && cd build &&cmake .. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_INSTALL_PREFIX=$InstallDir -DWITH_V4L=ON -DWITH_CUDA=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DWITH_QT=ON -DCMAKE_CXX_FLAGS=-std=c++11 -DWITH_OPENGL=ON -DOPENCV_EXTRA_MODULES_PATH=$SCRIPTPATH/opencv-${cvVersion}/opencv_contrib-${cvVersion}/modules -DOPENCV_ENABLE_NONFREE=ON -DCeres_DIR=$InstallDir/lib/cmake/Ceres && make -j $(nproc) && make install && cd .. && rm -r build
 #end comment out OpenCV
-
+# Ensure CMake can find OpenCV
+export OpenCV_DIR=$InstallDir
+export PKG_CONFIG_PATH=$InstallDir/lib/pkgconfig:$PKG_CONFIG_PATH
+export LD_LIBRARY_PATH=$InstallDir/lib:$LD_LIBRARY_PATH
 #Build Thirdparty libs	
 #=====================
 echo -e "Compiling Pangolin\n"
