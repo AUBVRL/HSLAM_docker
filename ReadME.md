@@ -81,7 +81,14 @@ A display window will pop with the camera's stream.
 ``` bash
     rosrun hslam_ros hslam_live image:=/usb_cam/image_raw calib=/catkin_ws/src/res/camera.txt gamma=/catkin_ws/src/res/pcalib.txt vignette=/catkin_ws/src/res/vignette.png
 ```
+
 Start moving the camera/computer around and perform SLAM.
+
+### Results:
+
+The HSLAM system output two files:
+1. **result.txt** file that contains corrected trajectory.
+2. **map.pcd** file containing point cloud of the contrusted map. 
 
 ## Features
 
