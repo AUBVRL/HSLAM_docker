@@ -29,9 +29,6 @@ Based on and inspired by DSO project by Jakob Engel
 #include <sensor_msgs/CameraInfo.h>
 #include <geometry_msgs/PoseStamped.h>
 #include "cv_bridge/cv_bridge.h"
-#include <sensor_msgs/PointCloud2.h>
-#include <nav_msgs/Path.h>
-#include <pcl_conversions/pcl_conversions.h>
 
 using namespace HSLAM;
 
@@ -44,9 +41,6 @@ bool useSampleOutput=false;
 int mode = 0;
 int preset= 0;
 
-ros::Publisher map_pub ;
-ros::Publisher pose_pub ;
-ros::Publisher path_pub ;
 
 void parseArgument(char* arg)
 {
@@ -211,58 +205,11 @@ void parseArgument(char* arg)
 }
 
 
+
+
 FullSystem* fullSystem = 0;
 Undistort* undistorter = 0;
 int frameID = 0;
-
-
-
-void publishResults() {        
-		nav_msgs::Path path;
-		geometry_msgs::PoseStamped pose_stamped;
-		sensor_msgs::PointCloud2 map;
-		pcl::PointCloud<pcl::PointXYZ> cloud;
-
-		std::vector<SE3> points;
-		std::vector<Eigen::Vector3f>map_points;
-
-		path.header.frame_id="map";
-		pose_stamped.header.frame_id="map";
-
-		points=fullSystem->getPath();
-		for (size_t i = 0; i < points.size(); i++)
-		{
-			pose_stamped.pose.position.x=points[i].translation().transpose().x();
-			pose_stamped.pose.position.y=points[i].translation().transpose().y();
-			pose_stamped.pose.position.z=points[i].translation().transpose().z();
-			pose_stamped.pose.orientation.x=points[i].so3().unit_quaternion().x();
-			pose_stamped.pose.orientation.y=points[i].so3().unit_quaternion().y();
-			pose_stamped.pose.orientation.z=points[i].so3().unit_quaternion().z();
-			pose_stamped.pose.orientation.w=points[i].so3().unit_quaternion().w();
-
-			path.poses.push_back(pose_stamped);
-		}
-
-		path_pub.publish(path);
-		pose_pub.publish(pose_stamped);
-
-		map_points=fullSystem->getMap();
-		for (size_t i = 0; i < map_points.size(); i++)
-		{
-			pcl::PointXYZ point;
-			point.x=map_points[i].x();
-			point.y=map_points[i].y();
-			point.z=map_points[i].z();
-			cloud.push_back(point);
-		}
-		pcl::toROSMsg(cloud, map);
-		map.header.frame_id="map";
-		map_pub.publish(map);
-    
-}
-
-
-
 
 void vidCb(const sensor_msgs::ImageConstPtr img)
 {
@@ -289,15 +236,9 @@ void vidCb(const sensor_msgs::ImageConstPtr img)
 	undistImg->timestamp=img->header.stamp.toSec(); // relay the timestamp to HSLAM
 	fullSystem->addActiveFrame(undistImg, frameID);
 	frameID++;
-	if (frameID>50)
-	{
-	publishResults();
-	}
-	
 	delete undistImg;
 
 }
-
 
 
 //NA: Adding interruption code
@@ -330,7 +271,7 @@ void exitThread()
 int main( int argc, char** argv )
 {		
 	boost::thread exThread = boost::thread(exitThread); // hook crtl+C.
-	ros::init(argc, argv, "hslam_live");
+	ros::init(argc, argv, "hslam_live_2");
 
 	for(int i=1; i<argc;i++) parseArgument(argv[i]);
 
@@ -377,9 +318,6 @@ int main( int argc, char** argv )
     ros::NodeHandle nh;
 	//ros::Rate loop_rate(10);
     ros::Subscriber imgSub = nh.subscribe("image", 1, &vidCb);
-	map_pub = nh.advertise<sensor_msgs::PointCloud2>("/hslam_map", 10);
-	pose_pub = nh.advertise<geometry_msgs::PoseStamped>("/hslam_pose", 10);
-	path_pub = nh.advertise<nav_msgs::Path>("/hslam_path", 10);
 
     //NA: replacing ros_spin with interruptable sequence
     //ros::spin();
@@ -434,8 +372,6 @@ int main( int argc, char** argv )
 			
 	
 	fullSystem->printResult("result.txt"); 
-	fullSystem->saveMap("map.pcd"); 
-
 	//if(viewer != 0)
 	//    viewer->run();
 	//Clean-up and exit
