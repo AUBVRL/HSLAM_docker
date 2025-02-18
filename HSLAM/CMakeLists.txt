@@ -1,9 +1,8 @@
 SET(PROJECT_NAME HSLAM)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.9)
 
-set(OpenCV_DIR /catkin_ws/src/HSLAM/Thirdparty/CompiledLibs/share/OpenCV)
-set(CMAKE_PREFIX_PATH /catkin_ws/src/HSLAM/Thirdparty/CompiledLibs/lib/cmake)
-
+set(OpenCV_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Thirdparty/CompiledLibs/share/OpenCV)
+set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Thirdparty/CompiledLibs/lib/cmake)
 # Ensure these paths are set correctly before calling project()
 message ("OPENCV Directory: ${OpenCV_DIR}")
 message("The CMAKE prefix path is: ${CMAKE_PREFIX_PATH}")

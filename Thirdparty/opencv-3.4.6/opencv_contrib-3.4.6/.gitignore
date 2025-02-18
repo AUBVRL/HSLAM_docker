@@ -1,5 +1,5 @@
 *.autosave
-*.pyc
+#*.pyc
 *.user
 *~
 .*.swp
@@ -8,5 +8,5 @@
 Thumbs.db
 tags
 tegra/
-*.i
+#*.i
 .download*

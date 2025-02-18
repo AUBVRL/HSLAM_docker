@@ -51,7 +51,10 @@ RUN apt-get install -y \
     qtbase5-dev-tools\
     v4l-utils\
     wget \
-    unzip
+    unzip \
+    libvtk7-dev \
+    openjdk-8-jdk \
+    pcl-tools
 
 # Set the working directory
 WORKDIR /catkin_ws/src/HSLAM/Thirdparty
@@ -70,8 +73,14 @@ COPY Thirdparty /catkin_ws/src/HSLAM/Thirdparty
 #     && wget -O opencv_contrib.zip -nc "${DL_contrib}" \
 #     && unzip opencv_contrib.zip \
 #     && rm opencv_contrib.zip
-#build Thirparty libraries using script(cmake)
-RUN chmod +x build.sh && ./build.sh
+
+
+
+
+#Build Thirparty libraries using bash script
+
+RUN chmod +x build.sh  && ./build.sh
+
 #Copy project files
 WORKDIR /catkin_ws/src/HSLAM
 COPY HSLAM /catkin_ws/src/HSLAM
@@ -95,5 +104,3 @@ WORKDIR /catkin_ws/src/HSLAM
 COPY res /catkin_ws/src/res
 WORKDIR /catkin_ws
 CMD ["bash"]
-
-
